@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import Login from "./Login";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Cookies from "js-cookie";
+//import { useState, useEffect } from "react"
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,10 +14,6 @@ ReactDOM.render(
       <Route exact path="/">
         {Cookies.get("usersession") ? 
         <App/>:<Login/>}
-      </Route>
-      
-      <Route exact path="/login">
-        <Login />
       </Route>
 </Router>
 

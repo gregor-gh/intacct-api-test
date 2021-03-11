@@ -124,7 +124,9 @@ router.put("/user", async (req, res) => {
     // compare username and password, if they match then login successful
     if (await bcrypt.compare(req.body.password, result.password)) {
       let cookievalue = await bcrypt.hash(process.env.SECRET, 10);
-      res.cookie("usersession", cookievalue).send({ "Success": "Login successful" });
+      res.cookie("usersession", cookievalue)
+        .cookie("username", req.body.username)
+        .send({ "Success": "Login successful" });
       db.createSession({
         username: req.body.username.toLowerCase(),
         session: cookievalue,
@@ -132,14 +134,22 @@ router.put("/user", async (req, res) => {
       return;
     }
       
-
     // otherwise login failed
     return res.send({ "Error": "Password incorrect" });
 
-    res.send(username)
   } catch (error) {
     res.send(error)
   }
 });
+
+router.delete("/logout", async (req, res) => {
+  // clear cookie from browser
+  res.clearCookie("usersession").redirect("/");
+
+  // clear cookie from db
+  const cookieValue = req.cookies.usersession;
+
+
+})
 
 module.exports = router;

@@ -69,4 +69,19 @@ const createSession = async (session) => {
   }
 }
 
+const logoutUser = async (session) => {
+  try {
+    // connect
+    const db = await connect();
+
+    // set table
+    const collection = db.collection("sessions");
+
+    const result = collection.deleteOne(session)
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = { createUser,loginUser, createSession }

@@ -1,7 +1,6 @@
 //import GlobalStyle from 'carbon-react/lib/style/global-style';
 import "./App.css"
 import React from 'react';
-//import { BrowserRouter as Router, Route } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { ThemeProvider } from "styled-components";
 import mintTheme from "carbon-react/lib/style/themes/mint";
@@ -11,6 +10,7 @@ import IssueTable from "./components/IssueTable.js"
 import NavBar from "./components/NavBar.js"
 import AddIssue from "./components/AddIssue.js";
 import ToastPop from "./components/ToastPop.js"
+import Cookies from "js-cookie"
 
 function App() {
 
@@ -38,7 +38,7 @@ function App() {
    accountNo: "",
    title: "",
    accountType: "",
-   normalBalance: ""
+   normalBalance: "",
  })
 
   useEffect(() => {
