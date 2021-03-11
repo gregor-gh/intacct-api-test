@@ -10,6 +10,7 @@ const Login = () => {
 
   const [username, setUsername] = useState("demouser");
   const [password, setPassword] = useState("demouser");
+  const [message, setMessage] = useState("") // returns any error messages
 
 
   const submit = async e => {
@@ -24,8 +25,14 @@ const Login = () => {
     const method = "PUT" // original used GET but this doesn't allow body, not worth rewriting
 
     try {
-      await fetch("/api/user", { method, body });
-      window.location.reload();
+      const response = await fetch("/api/user", { method, body });
+      const data = await response.json();
+      console.log(data)
+      if (!data["Error"]) {
+        window.location.reload();
+      } else {
+        setMessage(data["Error"])
+      }
     } catch (error) {
       console.log(error)
     }
@@ -41,6 +48,8 @@ const Login = () => {
         <Button buttonType="primary" type="submit" onClick={submit}>
           Sign In
         </Button>
+        <br/>
+        <span style={{ color: "red" }}>{message}</span>
         
       </Form>
     </div>
