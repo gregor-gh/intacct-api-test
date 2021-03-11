@@ -16,9 +16,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // point to react build folder
-if (process.env.BUILD == "LIVE") {
+//if (process.env.BUILD == "LIVE") {
   app.use(express.static(path.join(__dirname, 'client', 'build')));
-}
+//}
 
 
 
