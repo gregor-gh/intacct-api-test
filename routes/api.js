@@ -112,7 +112,7 @@ router.post("/user", async (req, res) => {
 });
 
 // for logging in
-router.get("/user", async (req, res) => {
+router.put("/user", async (req, res) => {
 
   try {
     // check user
