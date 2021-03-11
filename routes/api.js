@@ -2,10 +2,12 @@ var express = require('express');
 var router = express.Router();
 const client = require("../connection/config.js")
 const IA = require("@intacct/intacct-sdk");
+const bcrypt = require("bcrypt");
+const db = require("../database/db");
+require ("dotenv").config()
 
 router.get("/general", async (req, res) => {
 
-  
   let query = new IA.Functions.Common.ReadByQuery();
   query.objectName = "GLACCOUNT";
   query.pageSize = 1000;
@@ -21,7 +23,7 @@ router.get("/general", async (req, res) => {
   const readResults = readResponse.results[0].data;
 
   res.send(readResults);
-})
+});
 
 router.post("/general/add", async (req, res) => {
 
@@ -33,7 +35,7 @@ router.post("/general/add", async (req, res) => {
   create.accountType = account.accountType;
   create.normalBalance = account.normalBalance;
   if (account.accountType == "incomestatement") { // hard coding retained earnings rather than add more fields to the add interface
-    create.closeIntoGlAccountNo = "35000" 
+    create.closeIntoGlAccountNo = "35000"
     create.closingType = "closed to account"
   }
 
@@ -45,11 +47,7 @@ router.post("/general/add", async (req, res) => {
     console.log(error)
     res.send("ERROR")
   }
-  
-
-  
-
-})
+});
 
 router.put("/general/add", async (req, res) => {
 
@@ -77,10 +75,7 @@ router.put("/general/add", async (req, res) => {
     console.log(error)
     res.send("ERROR")
   }
-
-
-
-})
+});
 
 router.delete("/general/delete", async (req, res) => {
 
@@ -98,8 +93,53 @@ router.delete("/general/delete", async (req, res) => {
     console.log(error)
     res.send("ERROR")
   }
+});
 
+// for creating users
+router.post("/user", async (req, res) => {
 
-})
+  try {
+    const hashPassword = await bcrypt.hash(req.body.password, 10);
+    const result = await db.createUser({
+      username: req.body.username.toLowerCase(),
+      password: hashPassword,
+    });
+    res.send(result)
+
+  } catch (error) {
+    res.send(error)
+  }
+});
+
+// for logging in
+router.get("/user", async (req, res) => {
+
+  try {
+    // check user
+    const result = await db.loginUser(req.body.username.toLowerCase());
+
+    // if user not found return error
+    if (!result) return res.send({ "Error": "User Not Found" });
+
+    // compare username and password, if they match then login successful
+    if (await bcrypt.compare(req.body.password, result.password)) {
+      let cookievalue = await bcrypt.hash(process.env.SECRET, 10);
+      res.cookie("usersession", cookievalue).send({ "Success": "Login successful" });
+      db.createSession({
+        username: req.body.username.toLowerCase(),
+        session: cookievalue,
+      });
+      return;
+    }
+      
+
+    // otherwise login failed
+    return res.send({ "Error": "Password incorrect" });
+
+    res.send(username)
+  } catch (error) {
+    res.send(error)
+  }
+});
 
 module.exports = router;

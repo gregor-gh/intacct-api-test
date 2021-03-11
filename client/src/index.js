@@ -3,10 +3,23 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Login from "./Login";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Cookies from "js-cookie";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Route exact path="/">
+        {Cookies.get("usersession") ? 
+        <App/>:<Login/>}
+      </Route>
+      
+      <Route exact path="/login">
+        <Login />
+      </Route>
+</Router>
+
   </React.StrictMode>,
   document.getElementById('root')
 );
