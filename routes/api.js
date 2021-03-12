@@ -94,7 +94,7 @@ router.delete("/general/delete", async (req, res) => {
     res.send("ERROR")
   }
 });
-/*
+
 // for creating users
 router.post("/user", async (req, res) => {
 
@@ -151,5 +151,5 @@ router.delete("/logout", async (req, res) => {
 
 
 })
-*/
+
 module.exports = router;

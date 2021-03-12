@@ -1,4 +1,3 @@
-/*
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 
@@ -86,4 +85,3 @@ const logoutUser = async (session) => {
 }
 
 module.exports = { createUser,loginUser, createSession }
-*/
